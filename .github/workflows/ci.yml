@@ -21,23 +21,19 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          # Pinned rather than 'lts/*' on purpose. The npm major that ships with
-          # Node decides how strictly `npm ci` validates optional dependencies in
-          # the lockfile, so letting it drift can break CI without any change to
-          # this repo. Bump this deliberately, and regenerate package-lock.json
-          # on the same major when you do.
+          # Pinned rather than 'lts/*' so the Node and npm majors cannot drift
+          # underneath the build. Bump deliberately.
           node-version: '24'
-          cache: 'npm'
+          # No `cache: 'npm'` here. It derives its cache key from a lockfile and
+          # fails the job outright when there is none, and this repo does not
+          # commit one.
 
       - name: Install dependencies
-        # --omit=optional on purpose. playwright (a transitive dev dependency of
-        # @n8n/node-cli) optionally depends on fsevents, which is macOS-only and
-        # needs a native build. Generating the lockfile on macOS drops fsevents
-        # when that build fails, and Linux npm then fails validation looking for
-        # it. Omitting optional dependencies sidesteps the whole class: this
-        # package ships zero runtime dependencies, and neither lint nor build
-        # touches playwright or fsevents.
-        run: 'npm ci --omit=optional'
+        # `npm install`, not `npm ci`: this repo does not commit a lockfile.
+        # See the note in .gitignore. Every devDependency that affects the build
+        # output is pinned to an exact version in package.json, so the install is
+        # reproducible without one.
+        run: 'npm install --no-audit --no-fund'
 
       - name: Run lint
         run: 'npm run lint'

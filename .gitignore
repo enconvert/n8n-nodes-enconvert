@@ -1,3 +1,12 @@
 dist
 node_modules
 RELEASING.md
+
+# Not committed on purpose. This package has zero runtime dependencies, so the
+# lockfile pins nothing that ends up in the published artifact. Keeping it only
+# caused CI failures: playwright (a transitive dev dependency of @n8n/node-cli)
+# optionally depends on the macOS-only fsevents, and npm on macOS drops that
+# entry from the lockfile when its native build fails, which Linux npm then
+# rejects. Build reproducibility comes from exact version pins in
+# devDependencies instead.
+package-lock.json

@@ -80,12 +80,11 @@ jobs:
         with:
           # Kept in step with ci.yml. See the note there on why this is pinned.
           node-version: '24'
-          cache: 'npm'
+          # No `cache: 'npm'`; it requires a lockfile. See ci.yml.
 
       - name: Install dependencies
-        # Kept in step with ci.yml. See the note there on why optional
-        # dependencies are omitted.
-        run: 'npm ci --omit=optional'
+        # Kept in step with ci.yml. No lockfile is committed; see .gitignore.
+        run: 'npm install --no-audit --no-fund'
 
       - name: Release
         # Publishes to npm with a provenance attestation (requires id-token: write above).
