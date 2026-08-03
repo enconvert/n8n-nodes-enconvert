@@ -213,7 +213,6 @@ Tested against n8n 1.109 and later. Requires Node.js 20 or newer.
 ## Resources
 
 - [EnConvert documentation](https://www.enconvert.com/docs/introduction)
-- [EnConvert API reference](https://www.enconvert.com/docs)
 - [n8n community nodes documentation](https://docs.n8n.io/integrations/community-nodes/)
 
 ## Licence
