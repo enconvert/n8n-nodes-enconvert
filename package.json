@@ -1,0 +1,61 @@
+{
+	"name": "@enconvert/n8n-nodes-enconvert",
+	"version": "1.0.0",
+	"description": "Convert files, scrape web pages and crawl sites into AI-ready data with EnConvert",
+	"license": "MIT",
+	"homepage": "https://www.enconvert.com",
+	"keywords": [
+		"n8n-community-node-package",
+		"enconvert",
+		"pdf",
+		"docx",
+		"markdown",
+		"convert",
+		"scrape",
+		"crawl",
+		"rag"
+	],
+	"author": {
+		"name": "EnConvert",
+		"email": "support@enconvert.com"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/enconvert/n8n-nodes-enconvert.git"
+	},
+	"scripts": {
+		"build": "n8n-node build",
+		"build:watch": "tsc --watch",
+		"dev": "n8n-node dev",
+		"lint": "n8n-node lint",
+		"lint:fix": "n8n-node lint --fix",
+		"release": "n8n-node release",
+		"prepublishOnly": "n8n-node prerelease"
+	},
+	"files": [
+		"dist"
+	],
+	"publishConfig": {
+		"access": "public"
+	},
+	"n8n": {
+		"n8nNodesApiVersion": 1,
+		"strict": true,
+		"credentials": [
+			"dist/credentials/EnconvertApi.credentials.js"
+		],
+		"nodes": [
+			"dist/nodes/Enconvert/Enconvert.node.js"
+		]
+	},
+	"devDependencies": {
+		"@n8n/node-cli": "^0.41.2",
+		"eslint": "9.32.0",
+		"prettier": "3.6.2",
+		"release-it": "^21.0.1",
+		"typescript": "5.9.2"
+	},
+	"peerDependencies": {
+		"n8n-workflow": "*"
+	}
+}
