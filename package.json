@@ -55,6 +55,9 @@
 		"release-it": "^21.0.1",
 		"typescript": "5.9.2"
 	},
+	"overrides": {
+		"eslint": "9.32.0"
+	},
 	"peerDependencies": {
 		"n8n-workflow": "*"
 	}

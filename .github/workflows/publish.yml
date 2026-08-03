@@ -78,11 +78,14 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 'lts/*'
+          # Kept in step with ci.yml. See the note there on why this is pinned.
+          node-version: '24'
           cache: 'npm'
 
       - name: Install dependencies
-        run: 'npm ci'
+        # Kept in step with ci.yml. See the note there on why optional
+        # dependencies are omitted.
+        run: 'npm ci --omit=optional'
 
       - name: Release
         # Publishes to npm with a provenance attestation (requires id-token: write above).
