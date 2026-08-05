@@ -1,6 +1,7 @@
 dist
 node_modules
 RELEASING.md
+RECORDING_SCRIPT.md
 
 # Not committed on purpose. This package has zero runtime dependencies, so the
 # lockfile pins nothing that ends up in the published artifact. Keeping it only

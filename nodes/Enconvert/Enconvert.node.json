@@ -1,5 +1,5 @@
 {
-	"node": "@enconvert/n8n-nodes-enconvert",
+	"node": "@enconvert/n8n-nodes-enconvert.enconvert",
 	"nodeVersion": "1.0",
 	"codexVersion": "1.0",
 	"categories": ["Utility", "Productivity", "Data & Storage"],
