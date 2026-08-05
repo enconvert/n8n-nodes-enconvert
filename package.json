@@ -1,6 +1,6 @@
 {
 	"name": "@enconvert/n8n-nodes-enconvert",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"description": "Convert files, scrape web pages and crawl sites into AI-ready data with EnConvert",
 	"license": "MIT",
 	"homepage": "https://www.enconvert.com",
