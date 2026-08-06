@@ -30,7 +30,6 @@ export interface PerceiveResult extends IDataObject {
 /** Artifact name -> key it lands under in the item's json. */
 const TEXT_ARTIFACTS: Record<string, string> = {
 	markdown: 'markdown',
-	markdown_fit: 'markdownFit',
 	html_cleaned: 'htmlCleaned',
 	html_raw: 'htmlRaw',
 };
@@ -72,11 +71,10 @@ export const outputsField: INodeProperties = {
 		},
 		{ name: 'Images', value: 'images', description: 'Every image found on the page' },
 		{ name: 'Links', value: 'links', description: 'Every link found on the page' },
-		{ name: 'Markdown', value: 'markdown', description: 'The page as markdown text' },
 		{
-			name: 'Markdown (Fit)',
-			value: 'markdown_fit',
-			description: 'Markdown trimmed to the main content only',
+			name: 'Markdown',
+			value: 'markdown',
+			description: 'The page as markdown text, trimmed to the main content by default',
 		},
 		{ name: 'PDF', value: 'pdf', description: 'The rendered page as a PDF file' },
 		{ name: 'Raw HTML', value: 'html_raw', description: 'The page HTML exactly as rendered' },
@@ -197,6 +195,14 @@ export const perceiveOptionFields: INodeProperties[] = [
 		description: 'Whether to render as a phone, using a 390 by 844 viewport',
 	},
 	{
+		displayName: 'Only Main Content',
+		name: 'onlyMainContent',
+		type: 'boolean',
+		default: true,
+		description:
+			'Whether markdown keeps just the main content of the page, stripping navigation, headers, footers and cookie banners. Turn off to keep the full page with nothing stripped.',
+	},
+	{
 		displayName: 'Respect Robots.txt',
 		name: 'respectRobots',
 		type: 'boolean',
@@ -248,6 +254,7 @@ export function buildPerceiveOptions(options: IDataObject): IDataObject {
 	if (typeof options.jsCode === 'string' && options.jsCode !== '') payload.js_code = options.jsCode;
 	if (typeof options.cacheMode === 'string') payload.cache_mode = options.cacheMode;
 	if (options.mobile === true) payload.mobile = true;
+	if (options.onlyMainContent === false) payload.only_main_content = false;
 	if (options.respectRobots === true) payload.respect_robots = true;
 	if (Array.isArray(options.blockResources) && options.blockResources.length > 0) {
 		payload.block_resources = options.blockResources;
