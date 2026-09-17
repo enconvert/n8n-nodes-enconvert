@@ -20,6 +20,12 @@ export type BinarySource = Parameters<IExecuteFunctions['helpers']['prepareBinar
 export const CREDENTIAL_NAME = 'enconvertApi';
 const DEFAULT_BASE_URL = 'https://api.enconvert.com';
 
+/**
+ * Sent on every request so gateway traffic attributes as "n8n".
+ * Keep the version in sync with package.json.
+ */
+const USER_AGENT = 'enconvert-n8n/1.1.1';
+
 /** Presigned download URLs stay valid for 900s (gateway: utils/storage.py). */
 export const PRESIGNED_URL_TTL_SECONDS = 900;
 
@@ -49,7 +55,7 @@ export async function apiRequest(
 	const options: IHttpRequestOptions = {
 		method,
 		url: `${baseUrl}${path}`,
-		headers: { Accept: 'application/json' },
+		headers: { Accept: 'application/json', 'User-Agent': USER_AGENT },
 		json: true,
 	};
 	if (body !== undefined) options.body = body;
@@ -84,7 +90,7 @@ export async function apiRequestWithStatus(
 	const options: IHttpRequestOptions = {
 		method,
 		url: `${baseUrl}${path}`,
-		headers: { Accept: 'application/json' },
+		headers: { Accept: 'application/json', 'User-Agent': USER_AGENT },
 		json: true,
 		returnFullResponse: true,
 	};
@@ -149,7 +155,7 @@ export async function apiRequestMultipart(
 	const options: IHttpRequestOptions = {
 		method: 'POST',
 		url: `${baseUrl}${path}`,
-		headers: { Accept: 'application/json' },
+		headers: { Accept: 'application/json', 'User-Agent': USER_AGENT },
 		body: form,
 		json: false,
 		returnFullResponse: true,
@@ -200,6 +206,7 @@ export async function downloadArtifact(
 		const response = (await this.helpers.httpRequest({
 			method: 'GET',
 			url,
+			headers: { 'User-Agent': USER_AGENT },
 			encoding: 'stream',
 			returnFullResponse: true,
 			json: false,

@@ -17,6 +17,10 @@ export interface PerceiveResult extends IDataObject {
 	url_final?: string;
 	content_hash?: string;
 	render_quality?: number;
+	/** Content-free block: HTTP 200, empty outputs, not billed. */
+	is_blocked?: boolean;
+	/** False when the read was not charged (blocked, http_error, login_wall). */
+	billed?: boolean;
 	cache_hit?: boolean;
 	outputs?: Record<string, OutputArtifact>;
 	structured?: IDataObject;
@@ -324,6 +328,8 @@ export async function perceiveToItem(
 		urlFinal: result.url_final,
 		cacheHit: result.cache_hit,
 		renderQuality: result.render_quality,
+		isBlocked: result.is_blocked,
+		billed: result.billed,
 		costCents: result.cost_cents,
 		durationMs: result.duration_ms,
 	};

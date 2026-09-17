@@ -4,6 +4,16 @@ An n8n community node for [EnConvert](https://www.enconvert.com). Convert files 
 web pages into clean markdown, and crawl whole sites into passages you can embed in a vector store —
 all from one node.
 
+Every **Scrape** result carries `renderQuality` (0.0-1.0) plus `isBlocked` and `billed`, so a bot wall,
+challenge page or empty shell is flagged rather than mistaken for content (a detected block is a normal
+success with no artifacts and no charge). Gate on it with an **IF** node before anything downstream:
+
+```
+{{ !$json.isBlocked
+   && $json.renderQuality >= 0.4
+   && ($json.markdown ?? '').length > 0 }}
+```
+
 [n8n](https://n8n.io/) is a [fair-code licensed](https://docs.n8n.io/sustainable-use-license/)
 workflow automation platform.
 
