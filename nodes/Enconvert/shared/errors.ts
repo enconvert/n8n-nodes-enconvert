@@ -64,22 +64,37 @@ function formatBytes(bytes: number): string {
 function readGatewayError(error: unknown): GatewayError | undefined {
 	if (error === null || typeof error !== 'object') return undefined;
 	const candidate = error as IDataObject & { response?: IDataObject; cause?: IDataObject };
+	// httpRequestWithAuthentication rethrows the axios error wrapped in a generic
+	// NodeApiError, so the response sits on its cause. axios keeps the body in `data`.
+	const response = candidate.response ?? (candidate.cause?.response as IDataObject | undefined);
 
 	const statusCode =
 		toStatus(candidate.httpCode) ??
 		toStatus(candidate.statusCode) ??
 		toStatus(candidate.status) ??
-		toStatus(candidate.response?.status) ??
+		toStatus(response?.status) ??
 		toStatus(candidate.cause?.statusCode);
 	if (statusCode === undefined) return undefined;
 
-	const rawBody =
-		(candidate.response?.body as IDataObject | undefined) ??
-		(candidate.error as IDataObject | undefined) ??
-		(candidate.body as IDataObject | undefined) ??
-		{};
+	return {
+		statusCode,
+		body: toBody(response?.data ?? response?.body ?? candidate.error ?? candidate.body),
+	};
+}
 
-	return { statusCode, body: typeof rawBody === 'object' ? rawBody : {} };
+/** axios parses JSON bodies itself; a body it could not parse arrives as a string. */
+function toBody(raw: unknown): IDataObject {
+	if (typeof raw === 'string') {
+		try {
+			raw = JSON.parse(raw);
+		} catch {
+			return {};
+		}
+	}
+	// Plain objects only: a failed `encoding: 'stream'` download hands back a stream.
+	return raw !== null && typeof raw === 'object' && Object.getPrototypeOf(raw) === Object.prototype
+		? (raw as IDataObject)
+		: {};
 }
 
 function toStatus(value: unknown): number | undefined {
@@ -93,9 +108,13 @@ function toStatus(value: unknown): number | undefined {
  * message the user can act on. Never lets a raw TypeError escape.
  */
 export function toNodeApiError(node: INode, error: unknown, itemIndex: number): NodeApiError {
-	if (error instanceof NodeApiError) return error;
-
 	const gateway = readGatewayError(error);
+
+	// Pass through errors built here (they have no cause) and n8n errors with no
+	// HTTP status (DNS, refused connection). n8n's generic wrapper around an HTTP
+	// error ("Bad request - please check your parameters") is rebuilt below.
+	if (error instanceof NodeApiError && (!gateway || !(error.cause instanceof Error))) return error;
+
 	const fallback = error instanceof Error ? error.message : 'Unknown error';
 	const detail = gateway ? (extractMessage(gateway.body) ?? fallback) : fallback;
 

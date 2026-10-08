@@ -24,7 +24,7 @@ const DEFAULT_BASE_URL = 'https://api.enconvert.com';
  * Sent on every request so gateway traffic attributes as "n8n".
  * Keep the version in sync with package.json.
  */
-const USER_AGENT = 'enconvert-n8n/1.1.1';
+const USER_AGENT = 'enconvert-n8n/1.1.2';
 
 /** Presigned download URLs stay valid for 900s (gateway: utils/storage.py). */
 export const PRESIGNED_URL_TTL_SECONDS = 900;
